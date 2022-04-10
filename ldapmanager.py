@@ -3,8 +3,8 @@
 import os
 
 menu_options={
- 1:'NETOPS-2000',
- 2:'Engineering-3000',
+ 1:'Group1',
+ 2:'Group2',
  3:'Back',
 }
 main_options={
