@@ -1,0 +1,13 @@
+dn: uid={usr},ou=people,dc=dezmeana,dc=local,dc=au
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: {usr}
+sn: {lname}
+givenName: {fname}
+cn: {lname}
+displayName: {usr}
+uidNumber: {uid}
+gidNumber: {gid}
+loginShell: /bin/bash
+homeDirectory: /home/{usr}
