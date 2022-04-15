@@ -2,11 +2,13 @@
 
 import os
 
+# menu to identify the GID
 menu_options = {
     1: 'Group1',
     2: 'Group2',
     3: 'Back',
 }
+# first menu you see when running the script.
 main_options = {
     1: 'Create User',
     2: 'Delete User',
@@ -15,23 +17,26 @@ main_options = {
 }
 
 
+# wonder if I can merge the next two into one since they the same function
 def print_main():
     for key in main_options.keys():
         print(key, '--', main_options[key])
 
 
+# as baove
 def print_menu():
     for key in menu_options.keys():
         print(key, '--', menu_options[key])
 
 
+# main menu options and triggers
 def main_menu():
     print_main()
     option = ''
     try:
         option = int(input('Enter your choice: '))
     except:
-        print: ('Wrong input. Please enter a number...')
+        print('Wrong input. Please enter a number...')
     if option == 1:
         create_user()
     if option == 2:
@@ -43,13 +48,14 @@ def main_menu():
     exit()
 
 
+# menu option to identify GID
 def gid_menu():
     print_menu()
     option = ''
     try:
         option = int(input('Enter your choice: '))
     except:
-        print: ('Wrong input. Please enter a number... ')
+        print('Wrong input. Please enter a number... ')
     if option == 1:
         return 2000
     if option == 2:
@@ -58,6 +64,8 @@ def gid_menu():
         main_menu()
 
 
+# Use the GID defined to find the next available
+# GID in a list return from open ldap
 def finduid(gid):
     clidata = os.popen(
         "ldapsearch -x -b 'dc=dezmeana,dc=local,dc=au' | grep -B 1 %s | grep uid" % gid).read()
@@ -71,6 +79,7 @@ def finduid(gid):
         return intrimuid
 
 
+# takes users inputs and defined GID and UID to create a new user in openldap
 def create_user():
     usr = input("Enter username: ")
     fname = input("Enter firstname: ")
@@ -96,15 +105,17 @@ def create_user():
     print(data)
 
     # Binding new accout to ldap.
-    os.system('sudo ldapadd -x -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -f /root/%s.ldif' % usr)
-    os.system('sudo ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
+    os.system('ldapadd -x -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -f /root/%s.ldif' % usr)
+    os.system('ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
     main_menu()
 
 
+# TODO complete the delete user module
 def delete_user():
     main_menu()
 
 
+# function to delete user
 def chng_pswd():
     usr = input("Enter username: ")
     os.system('ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
@@ -112,4 +123,4 @@ def chng_pswd():
 
 
 if __name__ == '__main__':
-main_menu()
+    main_menu()
