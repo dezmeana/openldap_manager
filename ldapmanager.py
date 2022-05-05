@@ -67,8 +67,8 @@ def gid_menu():
 # Use the GID defined to find the next available
 # GID in a list return from open ldap
 def finduid(gid):
-    clidata = os.popen(
-        "ldapsearch -x -b 'dc=dezmeana,dc=local,dc=au' | grep -B 1 %s | grep uid" % gid).read()
+    clidata = os.popen("ldapsearch -x -b 'dc=dezmeana,dc=local,dc=au'\
+     | grep -B 1 %s | grep uid" % gid).read()
     data = [int(i) for i in clidata.split() if i.isdigit()]
     newuid = (max(data))
     intrimuid = newuid + + 1
@@ -105,8 +105,10 @@ def create_user():
     print(data)
 
     # Binding new accout to ldap.
-    os.system('ldapadd -x -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -f /root/%s.ldif' % usr)
-    os.system('ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
+    os.system('ldapadd -x -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" \
+    -f /root/%s.ldif' % usr)
+    os.system('ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" \
+    -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
     main_menu()
 
 
@@ -118,7 +120,8 @@ def delete_user():
 # function to delete user
 def chng_pswd():
     usr = input("Enter username: ")
-    os.system('ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
+    os.system('ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" \
+    -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
     main_menu()
 
 
