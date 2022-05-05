@@ -13,7 +13,8 @@ main_options = {
     1: 'Create User',
     2: 'Delete User',
     3: 'Change password',
-    4: 'Exit',
+    4: 'Search current user'
+    5: 'Exit',
 }
 
 
@@ -44,6 +45,8 @@ def main_menu():
     if option == 3:
         chng_pswd()
     if option == 4:
+        srch_usr()
+    if option == 5:
         print('exiting')
     exit()
 
@@ -112,10 +115,16 @@ def create_user():
     main_menu()
 
 
-# TODO complete the delete user module
+# removes users and backsup 
 def delete_user():
+    usr = input("Enter username: ")
+    os.system('cp /root/%s.ldif /archived_ldap' % usr)
+    print('backing up ldif file to /archived_ldap')
+    os.system(ldapdelete -x -D "cn=admin,dc=dezmeana,dc=local,dc=au" -w "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
+    print('User removed from LDAP')
+    os.system('rm /root/%s.ldif' % usr)
+    print('main ldif file removed from root')
     main_menu()
-
 
 # function to delete user
 def chng_pswd():
@@ -123,7 +132,12 @@ def chng_pswd():
     os.system('ldappasswd -S -W -D "cn=admin,dc=dezmeana,dc=local,dc=au" \
     -x "uid=%s,ou=people,dc=dezmeana,dc=local,dc=au"' % usr)
     main_menu()
-
+              
+def srch_usr():
+    usr = input("Enter username: ")
+    userinfo = os.system('ldapsearch -x -b "cn=admin,dc=dezmeana,dc=local,dc=au" | grep -B 13 home/%s' % usr)
+    print(userinfo)
+    main_menu()
 
 if __name__ == '__main__':
     main_menu()
